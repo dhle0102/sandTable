@@ -21,7 +21,6 @@
 #define STEP_EN 8
 #define LIMIT_X 9
 #define LIMIT_Y 10
-#define LIMIT_Z 11  
 
 void stepper_init(void);
 long stepper_getPos(int motor);

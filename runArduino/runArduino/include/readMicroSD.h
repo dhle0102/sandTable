@@ -3,7 +3,7 @@
 
 #define READFILE 'r'
 #define WRITEFILE 'w'
-#define pinSD 10
+#define pinSD 4
 
 #define FILE0 "0.txt"
 #define FILE1 "1.txt"
@@ -22,6 +22,6 @@
 #include <SD.h>
 
 void initSD();
-void runFile(int  nameFile);
+void runFile(int nameFile);
 void convertLineFloat(File file,float * valueFloat);
 #endif

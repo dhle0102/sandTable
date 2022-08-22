@@ -3,12 +3,16 @@
 #include "serial.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#define BAUD_RATE 115200
+#include <HardwareSerial.h>
+
+
 void serial_init(void)
 {
-    Serial.begin(115200);
-    Serial.println("hello_world");
+    Serial.begin(BAUD_RATE);
+    Serial.println("Sandtable V1");
 }
+
+
 void print(const char *string, float value)
 {
     Serial.print(string);
