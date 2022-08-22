@@ -4,11 +4,13 @@ from matplotlib.animation import FuncAnimation
 import math
 
 def readFile(xNeed,yNeed):
-    f = open("starFull.gcode", "r")
+    f = open("5.txt", "r")
     for i in f.readlines():
-        i = i[4:len(i)-2]
-        x = i.split(' ')[0][1:]
-        y = i.split(' ')[1][1:]
+        i = i[1:len(i)-2]
+        #print(i)
+        x = i.split('Y')[0]
+        y = i.split('Y')[1]
+        print(x+y)
         #print(x)
         #print(y)
         #x0 = float(x)*math.cos(math.pi/2) + float(y)*math.sin(math.pi/2)
@@ -17,14 +19,15 @@ def readFile(xNeed,yNeed):
         #yNeed.append(float(y0))
         xNeed.append(float(x))
         yNeed.append(float(y))
+        #xNeed.append(x)
+        #yNeed.append(y)
     f.close()
+    #saveFileGcode(xNeed,yNeed)
 
 def saveFileGcode(xNeed,yNeed):
-    f = open("starFull.gcode",'w')
+    f = open("4.txt",'w')
     for i in range(0,len(xNeed)):
-        x = round(xNeed[i],3)
-        y = round(yNeed[i],3)
-        a = "G01 X" + str(x) + " Y" + str(y) + "\n" 
+        a = xNeed[i] + yNeed[i] + "\n" 
         f.write(a)
     f.close()
 
@@ -32,7 +35,9 @@ def drawPlot(xNeed,yNeed):
     plt.plot(xNeed,yNeed,'-')
     plt.grid(True)
     plt.show()
-    saveFileGcode(xNeed,yNeed)
+    plt.xlim((-220,220))
+    plt.ylim((-220,220))
+    #saveFileGcode(xNeed,yNeed)
 
 def convertValue(xNeed,yNeed):
     for i in range(0,len(xNeed)):
@@ -44,8 +49,8 @@ if __name__ == "__main__":
     xNeed = []
     yNeed = []
     readFile(xNeed,yNeed)
-    x = np.array(xNeed)
-    y = np.array(yNeed)
+    #x = np.array(xNeed)
+    #y = np.array(yNeed)
     drawPlot(xNeed,yNeed)
     #convertValue(xNeed,yNeed)
     #saveFileGcode(xNeed,yNeed)
