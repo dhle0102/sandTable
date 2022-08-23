@@ -13,6 +13,7 @@ float delta_step[2] = {0, 0};
 void main_draw(void);
 void draw(void);
 void runFile(int nameFile);
+void home(void);
 void setup()
 {
   // setup for sandTable
@@ -31,26 +32,48 @@ void setup()
 }
 void loop()
 {
-  //if (digitalRead(buttonMan) == 0){
-    //Serial.println("Man Mode");
-    // begin Man
-    for (float i = 0; i < 10.0;i++ ){
-     target_state.pos[0] = (float) i*10.0;
-     target_state.pos[1] = (float) i*10.0;
-     draw();
-     target_state.pos[0] = 0.0;
-     target_state.pos[1] = 0.0;
-     draw();  
-    };
+  if (digitalRead(buttonMan) == 1){
+    Serial.println("Man Mode");
+    // begin Mans
+    runFile(5);
+    home();
     runFile(2);
-    // home
+    home();
     runFile(3);
-    delay(5000);
+    home();
+    runFile(4);
 
-  //}else{
-    //Serial.println("Auto Mode");
-    // begin Auto 
-  //}
+  }else {
+    Serial.println("Auto Mode");
+    // begin Auto
+    if(mySerial.available()){
+      char value = mySerial.read();
+      switch (value)
+      {
+      case '1':
+        Serial.println("auto mode 1");
+        runFile(2);
+        break;
+      case '2':
+        Serial.println("auto mode 2");
+        runFile(3);
+        break;
+      case '3':
+        Serial.println("auto mode 3");        
+        runFile(4);
+        break;
+      case '4':
+        Serial.println("auto mode 4");
+        runFile(5);
+        break;
+      default:
+      case '5':
+        Serial.println("auto mode 1");
+        runFile(1);
+        break;
+      }
+    } 
+  }
 }
 
 void draw(void){
@@ -142,4 +165,11 @@ void runFile(int nameFile){
     } else {
         Serial.println("error opening test.txt");
     }
+}
+
+void home(void){
+ target_state.pos[0] = 0.0;
+ target_state.pos[1] = 0.0;
+ draw();
+ delay(1000);
 }
