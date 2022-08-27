@@ -3,11 +3,14 @@
 
 #define MAX_LINE_LENGTH 80
 #define buttonMan A0
-
+#define limitX A1
+#define limitY A2
+int i = 0;
 state_t target_state;
 state_t current_state;
 SoftwareSerial mySerial(RxSerial,TxSerial);
 float delta_step[2] = {0, 0};
+int homeSet = 0;
 
 // #define DEBUG
 void main_draw(void);
@@ -22,10 +25,15 @@ void setup()
   initSD(); // mircoSD
   mySerial.begin(BAUD_RATE); // Serial to connect ESP32
   pinMode(buttonMan,INPUT_PULLUP);
+  // limit 
+  pinMode(limitX,INPUT_PULLUP);
+  pinMode(limitY,INPUT_PULLUP);
   // clear status
   Serial.println("clear");
   memset(&target_state, 0, sizeof(state_t));
   memset(&current_state, 0, sizeof(state_t));
+  current_state.pos[0] = 0.0;
+  current_state.pos[1] = 0.0;
   current_state.step_offset[1] = 4800;
   sei();
   Serial.println("sandTable");
@@ -35,19 +43,26 @@ void loop()
   if (digitalRead(buttonMan) == 1){
     Serial.println("Man Mode");
     // begin Mans
-    runFile(5);
     home();
+    runFile(1);
     runFile(2);
-    home();
+    runFile(1);
     runFile(3);
-    home();
+    runFile(1);
     runFile(4);
-
-  }else {
+    runFile(1);
+    runFile(5);
+    runFile(1);
+    runFile(6);
+    }else {
+    if(homeSet == 0){
+      home();
+    }
     Serial.println("Auto Mode");
     // begin Auto
-    if(mySerial.available()){
-      char value = mySerial.read();
+    if(Serial.available()){
+      char value = Serial.read();
+      Serial.println(value);
       switch (value)
       {
       case '1':
@@ -66,9 +81,8 @@ void loop()
         Serial.println("auto mode 4");
         runFile(5);
         break;
-      default:
       case '5':
-        Serial.println("auto mode 1");
+        Serial.println("auto mode 5");
         runFile(1);
         break;
       }
@@ -83,6 +97,8 @@ void draw(void){
   }
   else
   {
+    i++;
+    Serial.println(i);
     main_draw();
   }
 }
@@ -147,7 +163,10 @@ void runFile(int nameFile){
             myFile = SD.open(FILE0);
     };
   if (myFile) {
-        while (myFile.available()) {
+      int file =  convertLineNumber(myFile);
+      Serial.println(file);
+      delay(2000);
+        while(myFile.available()) {
             // readline and get X Y 
             float coord[2];
             convertLineFloat(myFile,coord);
@@ -168,8 +187,31 @@ void runFile(int nameFile){
 }
 
 void home(void){
- target_state.pos[0] = 0.0;
- target_state.pos[1] = 0.0;
- draw();
- delay(1000);
-}
+  while (digitalRead(limitX) == 0)
+ {
+  digitalWrite(STEP_EN, LOW);
+  Serial.println("homeX");
+  for(int i = 0; i < 20; i++){
+  digitalWrite(DIR_X,HIGH);
+  digitalWrite(STEP_X,HIGH); 
+  delayMicroseconds(500); 
+  digitalWrite(STEP_X,LOW); 
+  delayMicroseconds(500); 
+  }
+ }
+  delay(1000);
+   while (digitalRead(limitY) == 0)
+ {
+  digitalWrite(STEP_EN, LOW);
+  Serial.println("homeY");
+  for(int i = 0; i < 20; i++){
+  digitalWrite(DIR_Y,HIGH);
+  digitalWrite(STEP_Y,HIGH); 
+  delayMicroseconds(500); 
+  digitalWrite(STEP_Y,LOW); 
+  delayMicroseconds(500); 
+  }
+ }
+digitalWrite(STEP_EN,HIGH);
+ homeSet = 1;
+ }

@@ -27,4 +27,5 @@ long stepper_getPos(int motor);
 void stepper_moveRelative(long *steps);
 void stepper_deltaStepCalc(float *target, float *current, float *delta_step);
 bool stepper_isRunning(void);
+void runX(long pwm);
 #endif

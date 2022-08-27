@@ -117,7 +117,10 @@ BLYNK_WRITE(V9){
   int pinValue = param.asInt();
   if(pinValue == 1){
     Serial.println("LED 4 :");
-    RGBcontrol(255,255,0);
+    //RGBcontrol(255,255,0);
+    digitalWrite(ledPin,HIGH);
+  }else{
+    digitalWrite(ledPin,LOW);
   }
 }
 // connect HOME

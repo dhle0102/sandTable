@@ -4,12 +4,12 @@ from matplotlib.animation import FuncAnimation
 import math
 
 def readFile(xNeed,yNeed):
-    f = open("5.txt", "r")
+    f = open("heart.gcode", "r")
     for i in f.readlines():
         i = i[1:len(i)-2]
         #print(i)
-        x = i.split('Y')[0]
-        y = i.split('Y')[1]
+        x = i.split(' ')[1]
+        y = i.split(' ')[2]
         print(x+y)
         #print(x)
         #print(y)
@@ -17,15 +17,15 @@ def readFile(xNeed,yNeed):
         #y0 = float(x)*(-(math.sin(math.pi/2))) + float(y)*math.cos(math.pi/2)
         #xNeed.append(float(x0+4))
         #yNeed.append(float(y0))
-        xNeed.append(float(x))
-        yNeed.append(float(y))
-        #xNeed.append(x)
-        #yNeed.append(y)
+        #xNeed.append(float(x))
+        #yNeed.append(float(y))
+        xNeed.append(x)
+        yNeed.append(y)
     f.close()
-    #saveFileGcode(xNeed,yNeed)
+    saveFileGcode(xNeed,yNeed)
 
 def saveFileGcode(xNeed,yNeed):
-    f = open("4.txt",'w')
+    f = open("heart.txt",'w')
     for i in range(0,len(xNeed)):
         a = xNeed[i] + yNeed[i] + "\n" 
         f.write(a)

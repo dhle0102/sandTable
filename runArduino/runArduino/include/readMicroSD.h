@@ -24,4 +24,5 @@
 void initSD();
 void runFile(int nameFile);
 void convertLineFloat(File file,float * valueFloat);
+int convertLineNumber(File file);
 #endif

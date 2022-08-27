@@ -51,4 +51,17 @@ void convertLineFloat(File file, float * valueFloat){
     
 };
 
-    
+int convertLineNumber(File file){
+    char value;
+    String X = "";
+    do{
+        // read char 
+        value = file.read();
+        // get value 
+        X = X + value;
+    }
+    while (value != '\n');
+
+    // convert value 
+    return X.toInt();
+}
